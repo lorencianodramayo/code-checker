@@ -200,27 +200,71 @@ export default function Code() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                border: "1px solid #d7d7d7",
+                border: "1px solid #b3b3b3",
                 backgroundColor: "#c3c3c3cc",
               }}
             >
               <ReactCompareSlider
-                style={{ display: 'flex'}}
+                style={{ display: "flex" }}
                 itemOne={
-                  <iframe
-                    src={`${overview[0]?.contentLocation}/index.html`}
-                    width={Number(overview[0]?.size?.split("x")[0])}
-                    height={Number(overview[0]?.size?.split("x")[1])}
-                    style={{ border: 0 }}
-                  />
+                  <>
+                    <iframe
+                      src={`${overview[0]?.contentLocation}/index.html`}
+                      width={Number(overview[0]?.size?.split("x")[0])}
+                      height={Number(overview[0]?.size?.split("x")[1])}
+                      style={{ border: 0 }}
+                    />
+                    <div
+                      style={{
+                        position: "absolute",
+                        display: "flex",
+                        bottom: "1em",
+                        margin: "0 auto",
+                        width: "100%",
+                        left: 0,
+                        right: 0,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Tag
+                        color="success"
+                        style={{ borderRadius: "3px", margin: 0 }}
+                      >
+                        Original
+                      </Tag>
+                    </div>
+                  </>
                 }
                 itemTwo={
-                  <iframe
-                    src={`${overview[1]?.contentLocation}/index.html`}
-                    width={Number(overview[1]?.size?.split("x")[0])}
-                    height={Number(overview[1]?.size?.split("x")[1])}
-                    style={{ border: 0 }}
-                  />
+                  <>
+                    <iframe
+                      src={`${overview[1]?.contentLocation}/index.html`}
+                      width={Number(overview[1]?.size?.split("x")[0])}
+                      height={Number(overview[1]?.size?.split("x")[1])}
+                      style={{ border: 0 }}
+                    />
+                    <div
+                      style={{
+                        position: "absolute",
+                        display: "flex",
+                        bottom: "1em",
+                        margin: "0 auto",
+                        width: "100%",
+                        left: 0,
+                        right: 0,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Tag
+                        color="error"
+                        style={{ borderRadius: "3px", margin: 0 }}
+                      >
+                        Updated
+                      </Tag>
+                    </div>
+                  </>
                 }
               ></ReactCompareSlider>
             </div>
