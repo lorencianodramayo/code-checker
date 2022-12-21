@@ -281,11 +281,12 @@ export default function Code() {
                   <Button
                     style={{
                       borderRadius: "3px",
-                      backgroundColor: "#5025c4",
-                      color: "#fff",
+                      backgroundColor: "#f5f5f5",
+                      border: "1px solid #5025c4",
+                      color: "#5025c4",
                     }}
                     icon={<PlusOutlined />}
-                    type="primary"
+                    type="outlined"
                   >
                     Generate New
                   </Button>
@@ -310,7 +311,7 @@ export default function Code() {
                       src={`${overview[0]?.contentLocation}/index.html`}
                       width={Number(overview[0]?.size?.split("x")[0])}
                       height={Number(overview[0]?.size?.split("x")[1])}
-                      style={{ border: 0 }}
+                      style={{ border: 0, backgroundColor: "#c3c3c3cc" }}
                     />
                     <div
                       style={{
@@ -340,7 +341,7 @@ export default function Code() {
                       src={`${overview[1]?.contentLocation}/index.html`}
                       width={Number(overview[1]?.size?.split("x")[0])}
                       height={Number(overview[1]?.size?.split("x")[1])}
-                      style={{ border: 0 }}
+                      style={{ border: 0, background: "#c3c3c3cc" }}
                     />
                     <div
                       style={{
