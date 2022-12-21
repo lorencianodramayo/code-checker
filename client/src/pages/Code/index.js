@@ -439,7 +439,8 @@ export default function Code() {
                           : platform[1],
                         (o) => o?.name
                       ),
-                      (f) => f?.name?.includes(search)
+                      (f) =>
+                        f?.name?.toLowerCase()?.includes(search.toLowerCase())
                     )?.map(
                       (data, index) =>
                         data?.name !== "__platform_preview.html" &&
@@ -516,15 +517,16 @@ export default function Code() {
                                   : faSquare
                               }
                             />
-                            <Typography
+                            <Typography.Paragraph
                               style={{
                                 fontSize: "11px",
                                 fontWeight: 400,
-                                marginLeft: "0.5em",
+                                margin: "4px 0px 4px 7px",
                               }}
+                              ellipsis
                             >
                               {data?.name}
-                            </Typography>
+                            </Typography.Paragraph>
                           </div>
                         )
                     )}
@@ -587,7 +589,8 @@ export default function Code() {
                           : platform[0],
                         (o) => o?.name
                       ),
-                      (f) => f?.name?.includes(search)
+                      (f) =>
+                        f?.name?.toLowerCase()?.includes(search.toLowerCase())
                     )?.map(
                       (data, index) =>
                         data?.name !== "__platform_preview.html" &&
@@ -664,15 +667,16 @@ export default function Code() {
                                   : faSquare
                               }
                             />
-                            <Typography
+                            <Typography.Paragraph
                               style={{
                                 fontSize: "11px",
                                 fontWeight: 400,
-                                marginLeft: "0.5em",
+                                margin: "4px 0px 4px 7px",
                               }}
+                              ellipsis
                             >
                               {data?.name}
-                            </Typography>
+                            </Typography.Paragraph>
                           </div>
                         )
                     )}
@@ -689,7 +693,8 @@ export default function Code() {
                   <Space direction="vertical" style={{ width: "100%" }}>
                     {_.filter(
                       _.sortBy(codeChecker, (o) => o?.name),
-                      (f) => f?.name?.includes(search)
+                      (f) =>
+                        f?.name?.toLowerCase()?.includes(search.toLowerCase())
                     )?.map((codeCheck, index) => (
                       <Collapse
                         bordered={false}
