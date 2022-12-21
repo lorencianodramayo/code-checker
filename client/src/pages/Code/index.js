@@ -103,7 +103,10 @@ export default function Code() {
 
   useEffect(() => {
     !_.isEmpty(platform) &&
-      platform[0].map(
+      (platform[0][0]?.variant === "template_1"
+        ? platform[0]
+        : platform[1]
+      ).map(
         (data) =>
           !_.isEmpty(data?.name) &&
           data?.name !== "__platform_preview.html" &&
@@ -114,7 +117,9 @@ export default function Code() {
               name: data?.name,
               left: data?.code,
               right: _.find(
-                platform[1],
+                platform[1][0]?.variant === "template_2"
+                  ? platform[1]
+                  : platform[0],
                 (compare) => compare?.name === data?.name
               )?.code,
               diff_level: "word",
@@ -122,29 +127,36 @@ export default function Code() {
           )
       );
 
-    setCodeRange(
-      _.filter(
-        platform[0]?.map(
-          (data) =>
-            !_.isEmpty(data?.name) &&
-            data?.name !== "__platform_preview.html" &&
-            data?.name !== "" &&
-            !_.isUndefined(data?.code)
-        ),
-        (fil) => fil === true
-      )?.length === 0
-        ? null
-        : _.filter(
-            platform[0]?.map(
-              (data) =>
-                !_.isEmpty(data?.name) &&
-                data?.name !== "__platform_preview.html" &&
-                data?.name !== "" &&
-                !_.isUndefined(data?.code)
-            ),
-            (fil) => fil === true
-          )?.length
-    );
+    !_.isEmpty(platform) &&
+      setCodeRange(
+        _.filter(
+          (platform[0][0]?.variant === "template_1"
+            ? platform[0]
+            : platform[1]
+          ).map(
+            (data) =>
+              !_.isEmpty(data?.name) &&
+              data?.name !== "__platform_preview.html" &&
+              data?.name !== "" &&
+              !_.isUndefined(data?.code)
+          ),
+          (fil) => fil === true
+        )?.length === 0
+          ? null
+          : _.filter(
+              (platform[0][0]?.variant === "template_1"
+                ? platform[0]
+                : platform[1]
+              )?.map(
+                (data) =>
+                  !_.isEmpty(data?.name) &&
+                  data?.name !== "__platform_preview.html" &&
+                  data?.name !== "" &&
+                  !_.isUndefined(data?.code)
+              ),
+              (fil) => fil === true
+            )?.length
+      );
 
     !_.isEmpty(platform) && setSideOpen(200);
   }, [platform]);
@@ -401,7 +413,12 @@ export default function Code() {
                         style={{ fontSize: "10px", color: "#947bb7" }}
                       >{`${
                         _.filter(
-                          _.sortBy(platform[0], (o) => o.name)?.map(
+                          _.sortBy(
+                            platform[0][0]?.variant === "template_1"
+                              ? platform[0]
+                              : platform[1],
+                            (o) => o.name
+                          )?.map(
                             (data) =>
                               data?.name !== "__platform_preview.html" &&
                               data?.name !== "" &&
@@ -413,7 +430,12 @@ export default function Code() {
                     </div>
 
                     {_.filter(
-                      _.sortBy(platform[0], (o) => o?.name),
+                      _.sortBy(
+                        platform[0][0]?.variant === "template_1"
+                          ? platform[0]
+                          : platform[1],
+                        (o) => o?.name
+                      ),
                       (f) => f?.name?.includes(search)
                     )?.map(
                       (data, index) =>
@@ -539,7 +561,12 @@ export default function Code() {
                         style={{ fontSize: "10px", color: "#947bb7" }}
                       >{`${
                         _.filter(
-                          _.sortBy(platform[1], (o) => o.name)?.map(
+                          _.sortBy(
+                            platform[1][0]?.variant === "template_2"
+                              ? platform[1]
+                              : platform[0],
+                            (o) => o.name
+                          )?.map(
                             (data) =>
                               data?.name !== "__platform_preview.html" &&
                               data?.name !== "" &&
@@ -551,7 +578,12 @@ export default function Code() {
                     </div>
 
                     {_.filter(
-                      _.sortBy(platform[1], (o) => o?.name),
+                      _.sortBy(
+                        platform[1][0]?.variant === "template_2"
+                          ? platform[1]
+                          : platform[0],
+                        (o) => o?.name
+                      ),
                       (f) => f?.name?.includes(search)
                     )?.map(
                       (data, index) =>

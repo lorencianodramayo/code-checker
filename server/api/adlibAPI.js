@@ -9,11 +9,12 @@ router.get("/", (req, res) => {
   let zipPlatform = [];
   let overviewPlatform = [];
 
-  Object.values(req.query).map(async (data) => {
+  Object.values(req.query).map(async (data, index) => {
     const platformResult = await getPlatform({
       platform: data.split("/")[2].includes("app") ? "app" : "beta",
       conceptId: data.split("/")[4],
       templateId: data.split("/")[6],
+      variant: `template_${index + 1}`,
     });
 
     zipPlatform.push(platformResult?.zip);

@@ -1,7 +1,7 @@
 const AdmZip = require("adm-zip");
 const axios = require("axios");
 
-exports.unzipFile = async (template, platform) => {
+exports.unzipFile = async (template, platform, variant) => {
   const response = await axios
     .get(template, {
       responseType: "arraybuffer",
@@ -18,7 +18,8 @@ exports.unzipFile = async (template, platform) => {
           platform,
           name: entry.name,
           code: entry.getData().toString("utf8"),
+          variant,
         }
-      : { platform, name: entry.name }
+      : { platform, name: entry.name, variant }
   );
 };

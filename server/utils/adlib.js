@@ -38,7 +38,7 @@ const getAdlibToken = async (platform) => {
   return { status: "ok", data: loginCookie };
 };
 
-const getTemplate = async (platform, tId, pId) => {
+const getTemplate = async (platform, tId, pId, variant) => {
   return getAdlibToken(platform).then(async (result) => {
     if (result.status === "ok") {
       const platformRequest = await fetch(
@@ -67,7 +67,7 @@ const getTemplate = async (platform, tId, pId) => {
 
       return platformRequest.json().then(async (data) => {
         return {
-          zip: await unzipFile(data?.url, platform).then((zip) => zip),
+          zip: await unzipFile(data?.url, platform, variant).then((zip) => zip),
           overview: data,
         };
       });
@@ -76,7 +76,7 @@ const getTemplate = async (platform, tId, pId) => {
 };
 
 const getPlatform = async (params) => {
-  const { platform, conceptId, templateId } = params;
+  const { platform, conceptId, templateId, variant } = params;
 
   return getAdlibToken(platform).then(async (result) => {
     if (result.status === "ok") {
@@ -106,7 +106,9 @@ const getPlatform = async (params) => {
 
       return platformRequest
         .json()
-        .then((data) => getTemplate(platform, templateId, data?.partnerId));
+        .then((data) =>
+          getTemplate(platform, templateId, data?.partnerId, variant)
+        );
     }
   });
 };
