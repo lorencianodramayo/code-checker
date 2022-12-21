@@ -6,7 +6,8 @@ const { getPlatform } = require("../utils/adlib");
 const PlatformModel = require("../models/PlatformModel");
 
 router.get("/", (req, res) => {
-  let arr = [];
+  let zipPlatform = [];
+  let overviewPlatform = [];
 
   Object.values(req.query).map(async (data) => {
     const platformResult = await getPlatform({
@@ -14,12 +15,15 @@ router.get("/", (req, res) => {
       conceptId: data.split("/")[4],
       templateId: data.split("/")[6],
     });
-    arr.push(platformResult);
 
-    if (arr.length === 2) {
+    zipPlatform.push(platformResult?.zip);
+    overviewPlatform.push(platformResult?.overview);
+
+    if (zipPlatform.length === 2 && overviewPlatform.length === 2) {
       const platformSave = new PlatformModel({
         links: req.query,
-        platform: arr,
+        platform: zipPlatform,
+        overview: overviewPlatform,
       });
 
       platformSave.save((error, result) => {

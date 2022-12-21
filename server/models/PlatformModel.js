@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const PlatformSchema = new Schema({
   links: Array,
   platform: Array,
+  overview: Array,
   date: {
     type: String,
     default: Date.now(),

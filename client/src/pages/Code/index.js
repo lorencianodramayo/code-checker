@@ -46,6 +46,7 @@ import {
 } from "@ant-design/icons";
 import logoMini from "assets/images/smartly-mini.svg";
 import Loader from "components/Loader";
+import { ReactCompareSlider } from "react-compare-slider";
 
 const { Panel } = Collapse;
 const { Header, Content, Sider } = Layout;
@@ -56,7 +57,7 @@ export default function Code() {
   const [sideOpen, setSideOpen] = useState(0);
   const [codeRange, setCodeRange] = useState(null);
 
-  const { platform, links } = useSelector((state) => state.platform);
+  const { platform, links, overview } = useSelector((state) => state.platform);
   const { data: codeChecker } = useSelector((state) => state.code);
 
   const { codeId } = useParams();
@@ -192,6 +193,36 @@ export default function Code() {
                   disabled
                 />
               </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                border: "1px solid #d7d7d7",
+                backgroundColor: "#c3c3c3cc",
+              }}
+            >
+              <ReactCompareSlider
+                style={{ display: 'flex'}}
+                itemOne={
+                  <iframe
+                    src={`${overview[0]?.contentLocation}/index.html`}
+                    width={Number(overview[0]?.size?.split("x")[0])}
+                    height={Number(overview[0]?.size?.split("x")[1])}
+                    style={{ border: 0 }}
+                  />
+                }
+                itemTwo={
+                  <iframe
+                    src={`${overview[1]?.contentLocation}/index.html`}
+                    width={Number(overview[1]?.size?.split("x")[0])}
+                    height={Number(overview[1]?.size?.split("x")[1])}
+                    style={{ border: 0 }}
+                  />
+                }
+              ></ReactCompareSlider>
             </div>
             <Layout
               style={{

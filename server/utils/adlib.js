@@ -65,9 +65,11 @@ const getTemplate = async (platform, tId, pId) => {
         }
       );
 
-      return platformRequest.json().then((data) => {
-        // console.log(data);
-        return unzipFile(data?.url, platform).then((zip) => zip);
+      return platformRequest.json().then(async (data) => {
+        return {
+          zip: await unzipFile(data?.url, platform).then((zip) => zip),
+          overview: data,
+        };
       });
     }
   });

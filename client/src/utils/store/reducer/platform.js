@@ -1,17 +1,18 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
-import { getPlatform, getPlatformViaId } from 'utils/api/Platform';
+import { getPlatform, getPlatformViaId } from "utils/api/Platform";
 
 const initialState = {
   links: [],
   platform: [],
+  overview: [],
   codeId: null,
   isFetching: false,
   error: null,
 };
 
 const platform = createSlice({
-  name: 'platform',
+  name: "platform",
   initialState,
   reducers: {
     initPlatfrom: (state) => {
@@ -22,6 +23,7 @@ const platform = createSlice({
       state.links = payload.links;
       state.platform = payload.platform;
       state.codeId = payload._id;
+      state.overview = payload.overview;
       state.isFetching = false;
     },
     ErrorPlatform: (state, { payload }) => {
@@ -40,7 +42,7 @@ export const requestPlatform = (params) => async (dispatch) => {
 
   status === 200
     ? dispatch(SuccessPlatform(data))
-    : dispatch(ErrorPlatform('Something went wrong.'));
+    : dispatch(ErrorPlatform("Something went wrong."));
 };
 
 export const requestPlatformViaId = (id) => async (dispatch) => {
@@ -50,7 +52,7 @@ export const requestPlatformViaId = (id) => async (dispatch) => {
 
   status === 200
     ? dispatch(SuccessPlatform(data))
-    : dispatch(ErrorPlatform('Something went wrong.'));
+    : dispatch(ErrorPlatform("Something went wrong."));
 };
 
 export default platform.reducer;
