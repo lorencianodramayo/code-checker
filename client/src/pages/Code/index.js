@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 
 import FadeIn from "react-fade-in";
 
+import { useNavigate } from "react-router-dom";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHtml5,
@@ -15,9 +17,17 @@ import _ from "lodash";
 
 import { useParams } from "react-router-dom";
 
-import { requestPlatformViaId } from "utils/store/reducer/platform";
+import {
+  requestPlatformViaId,
+  requestPlatform,
+  ResetPlatform,
+} from "utils/store/reducer/platform";
 
-import { requestCodeCheck, initCodeChecker } from "utils/store/reducer/code";
+import {
+  requestCodeCheck,
+  initCodeChecker,
+  ResetCodeChecker,
+} from "utils/store/reducer/code";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -34,6 +44,7 @@ import {
   Button,
   Popover,
   Input,
+  Form,
 } from "antd";
 
 import {
@@ -42,26 +53,38 @@ import {
   LinkOutlined,
   InfoCircleOutlined,
   PlusOutlined,
-  FilterOutlined,
 } from "@ant-design/icons";
 import logoMini from "assets/images/smartly-mini.svg";
 import Loader from "components/Loader";
 import { ReactCompareSlider } from "react-compare-slider";
+
+import { validate } from "utils/helpers";
 
 const { Panel } = Collapse;
 const { Header, Content, Sider } = Layout;
 
 export default function Code() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
 
   const [sideOpen, setSideOpen] = useState(0);
   const [codeRange, setCodeRange] = useState(null);
+  const [search, setSearch] = useState("");
 
-  const { platform, links, overview } = useSelector((state) => state.platform);
+  const {
+    platform,
+    links,
+    overview,
+    codeId: codeCheckerId,
+  } = useSelector((state) => state.platform);
   const { data: codeChecker } = useSelector((state) => state.code);
 
   const { codeId } = useParams();
   const mounted = useRef(true);
+
+  const link1Value = Form.useWatch("link1", form);
+  const link2Value = Form.useWatch("link2", form);
 
   const {
     token: { colorBgContainer },
@@ -126,6 +149,20 @@ export default function Code() {
     !_.isEmpty(platform) && setSideOpen(200);
   }, [platform]);
 
+  useEffect(() => {
+    if (!_.isEmpty(link1Value) && !_.isEmpty(link2Value)) {
+      dispatch(requestPlatform([link1Value, link2Value]));
+      dispatch(ResetCodeChecker());
+      dispatch(ResetPlatform());
+    }
+
+    if (!_.isNull(codeCheckerId) && codeCheckerId !== codeId) {
+      navigate(`/code/${codeCheckerId}`);
+    }
+  }, [link1Value, link2Value, codeCheckerId]);
+
+  const handleSearch = (_value) => setSearch(_value);
+
   return (
     <Layout className="code">
       <Header className="header">
@@ -134,6 +171,7 @@ export default function Code() {
           <Typography.Text className="title">Code Checker</Typography.Text>
         </div>
       </Header>
+      {console.log(codeRange, codeChecker?.length)}
       {codeRange !== codeChecker?.length ? (
         <Loader />
       ) : (
@@ -153,35 +191,22 @@ export default function Code() {
               <div style={{ display: "flex" }}>
                 <Input
                   placeholder="Search"
-                  style={{ borderRadius: "3px", width: "200px" }}
-                  disabled
-                />
-                <Button
                   style={{
                     borderRadius: "3px",
-                    backgroundColor: "#eb2f96",
-                    marginLeft: "8px",
+                    width: "200px",
+                    "&:active": {
+                      borderColor: "#f7488b",
+                    },
+                    "&:hover": {
+                      borderColor: "#f7488b",
+                    },
+                    "&:focus": {
+                      borderColor: "#f7488b",
+                    },
                   }}
-                  type="primary"
-                  icon={<FilterOutlined />}
-                  disabled
+                  onChange={(e) => handleSearch(e.target.value)}
                 />
-              </div>
-              <div style={{ display: "flex" }}>
-                <Popover
-                  placement="bottomRight"
-                  content={<>Hello</>}
-                  trigger="click"
-                >
-                  <Button
-                    style={{ borderRadius: "3px", backgroundColor: "#eb2f96" }}
-                    icon={<PlusOutlined />}
-                    type="primary"
-                    disabled
-                  >
-                    Generate New
-                  </Button>
-                </Popover>
+
                 <Button
                   style={{
                     borderRadius: "3px",
@@ -190,8 +215,66 @@ export default function Code() {
                   }}
                   type="primary"
                   icon={<InfoCircleOutlined />}
-                  disabled
                 />
+              </div>
+              <div style={{ display: "flex" }}>
+                <Popover
+                  placement="bottomRight"
+                  content={
+                    <>
+                      <Form
+                        form={form}
+                        layout="vertical"
+                        requiredMark={true}
+                        autoComplete="off"
+                        initialValues={{
+                          link1: "",
+                          link2: "",
+                        }}
+                      >
+                        <Form.Item
+                          name="link1"
+                          label="Original template link"
+                          required
+                          tooltip="Select the correct variant in the platform before pasting."
+                          style={{ marginBottom: "12px" }}
+                        >
+                          <Input
+                            style={{ borderRadius: "3px" }}
+                            onKeyPress={(e) => validate(e)}
+                            allowClear
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          name="link2"
+                          label="Updated template link"
+                          required
+                          tooltip="Select the correct variant in the platform before pasting."
+                          style={{ marginBottom: "12px" }}
+                        >
+                          <Input
+                            style={{ borderRadius: "3px" }}
+                            onKeyPress={(e) => validate(e)}
+                            allowClear
+                          />
+                        </Form.Item>
+                      </Form>
+                    </>
+                  }
+                  trigger="click"
+                >
+                  <Button
+                    style={{
+                      borderRadius: "3px",
+                      backgroundColor: "#5025c4",
+                      color: "#fff",
+                    }}
+                    icon={<PlusOutlined />}
+                    type="primary"
+                  >
+                    Generate New
+                  </Button>
+                </Popover>
               </div>
             </div>
 
@@ -329,7 +412,10 @@ export default function Code() {
                       } Files`}</Typography>
                     </div>
 
-                    {_.sortBy(platform[0], (o) => o.name)?.map(
+                    {_.filter(
+                      _.sortBy(platform[0], (o) => o?.name),
+                      (f) => f?.name?.includes(search)
+                    )?.map(
                       (data, index) =>
                         data?.name !== "__platform_preview.html" &&
                         data?.name !== "" && (
@@ -464,7 +550,10 @@ export default function Code() {
                       } Files`}</Typography>
                     </div>
 
-                    {_.sortBy(platform[1], (o) => o.name)?.map(
+                    {_.filter(
+                      _.sortBy(platform[1], (o) => o?.name),
+                      (f) => f?.name?.includes(search)
+                    )?.map(
                       (data, index) =>
                         data?.name !== "__platform_preview.html" &&
                         data?.name !== "" && (
@@ -563,101 +652,103 @@ export default function Code() {
               >
                 <div>
                   <Space direction="vertical" style={{ width: "100%" }}>
-                    {_.sortBy(codeChecker, (o) => o.name).map(
-                      (codeCheck, index) => (
-                        <Collapse
-                          bordered={false}
+                    {_.filter(
+                      _.sortBy(codeChecker, (o) => o?.name),
+                      (f) => f?.name?.includes(search)
+                    )?.map((codeCheck, index) => (
+                      <Collapse
+                        bordered={false}
+                        key={index}
+                        defaultActiveKey={["0"]}
+                      >
+                        <Panel
+                          header={codeCheck?.name}
                           key={index}
-                          defaultActiveKey={["0"]}
+                          extra={
+                            codeCheck?.details?.removed !==
+                            codeCheck?.details?.added ? (
+                              <Tooltip
+                                placement="left"
+                                title={`${codeCheck?.details?.removed} Removed, ${codeCheck?.details?.added} Added`}
+                              >
+                                <CloseCircleTwoTone twoToneColor="#eb2f96" />
+                              </Tooltip>
+                            ) : (
+                              <Tooltip placement="left" title={"Identical"}>
+                                <CheckCircleTwoTone twoToneColor="#52c41a" />
+                              </Tooltip>
+                            )
+                          }
                         >
-                          <Panel
-                            header={codeCheck?.name}
-                            key={index}
-                            extra={
-                              codeCheck?.details?.removed !==
-                              codeCheck?.details?.added ? (
-                                <Tooltip
-                                  placement="left"
-                                  title={`${codeCheck?.details?.removed} Removed, ${codeCheck?.details?.added} Added`}
-                                >
-                                  <CloseCircleTwoTone twoToneColor="#eb2f96" />
-                                </Tooltip>
-                              ) : (
-                                <Tooltip placement="left" title={"Identical"}>
-                                  <CheckCircleTwoTone twoToneColor="#52c41a" />
-                                </Tooltip>
-                              )
-                            }
-                          >
-                            <Row style={{ marginBottom: "1em" }}>
-                              <Col span={12}>
+                          <Row style={{ marginBottom: "1em" }}>
+                            <Col span={12}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                }}
+                              >
                                 <div
                                   style={{
                                     display: "flex",
-                                    justifyContent: "space-between",
                                   }}
                                 >
-                                  <div
+                                  <Typography
                                     style={{
-                                      display: "flex",
+                                      marginRight: "1em",
+                                      fontSize: "13px",
+                                      color: "#747474",
                                     }}
                                   >
-                                    <Typography
-                                      style={{
-                                        marginRight: "1em",
-                                        fontSize: "13px",
-                                        color: "#747474",
-                                      }}
-                                    >
-                                      {`${
-                                        codeCheck?.details?.lines
-                                          ?.slice(-1)
-                                          ?.pop()?.right?.line
-                                      } Lines`}
-                                    </Typography>
-                                    <Tag color="magenta">{`${codeCheck?.details?.removed} Removed`}</Tag>
-                                  </div>
+                                    {`${
+                                      codeCheck?.details?.lines
+                                        ?.slice(-1)
+                                        ?.pop()?.left?.line
+                                    } Lines`}
+                                  </Typography>
+
+                                  <Tag color="magenta">{`${codeCheck?.details?.removed} Removed`}</Tag>
                                 </div>
-                              </Col>
-                              <Col span={12}>
+                              </div>
+                            </Col>
+                            <Col span={12}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                }}
+                              >
                                 <div
                                   style={{
                                     display: "flex",
-                                    justifyContent: "space-between",
                                   }}
                                 >
-                                  <div
+                                  <Typography
                                     style={{
-                                      display: "flex",
+                                      marginRight: "1em",
+                                      fontSize: "13px",
+                                      color: "#747474",
                                     }}
                                   >
-                                    <Typography
-                                      style={{
-                                        marginRight: "1em",
-                                        fontSize: "13px",
-                                        color: "#747474",
-                                      }}
-                                    >
-                                      {`${
-                                        codeCheck?.details?.lines
-                                          ?.slice(-1)
-                                          ?.pop()?.right?.line
-                                      } Lines`}
-                                    </Typography>
-                                    <Tag color="success">{`${codeCheck?.details?.added} Additions`}</Tag>
-                                  </div>
+                                    {`${
+                                      codeCheck?.details?.lines
+                                        ?.slice(-1)
+                                        ?.pop()?.right?.line
+                                    } Lines`}
+                                  </Typography>
+                                  <Tag color="success">{`${codeCheck?.details?.added} Additions`}</Tag>
                                 </div>
-                              </Col>
-                            </Row>
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: codeCheck?.code ?? "No message found",
-                              }}
-                            ></div>
-                          </Panel>
-                        </Collapse>
-                      )
-                    )}
+                              </div>
+                            </Col>
+                          </Row>
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: codeCheck?.code ?? "No message found",
+                            }}
+                          ></div>
+                        </Panel>
+                      </Collapse>
+                    ))}
                   </Space>
                 </div>
               </Content>

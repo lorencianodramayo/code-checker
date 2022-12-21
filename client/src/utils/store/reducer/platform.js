@@ -30,10 +30,18 @@ const platform = createSlice({
       state.error = payload;
       state.isFetching = false;
     },
+    ResetPlatform: (state) => {
+      state.links = [];
+      state.platform = [];
+      state.codeId = null;
+      state.overview = [];
+      state.isFetching = false;
+      state.error = null;
+    },
   },
 });
 
-export const { initPlatfrom, SuccessPlatform, ErrorPlatform } =
+export const { initPlatfrom, SuccessPlatform, ErrorPlatform, ResetPlatform } =
   platform.actions;
 
 export const requestPlatform = (params) => async (dispatch) => {
