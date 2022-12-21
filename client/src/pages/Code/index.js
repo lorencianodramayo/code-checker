@@ -169,6 +169,10 @@ export default function Code() {
     }
 
     if (!_.isNull(codeCheckerId) && codeCheckerId !== codeId) {
+      form.setFieldsValue({
+        link1: "",
+        link2: "",
+      });
       navigate(`/code/${codeCheckerId}`);
     }
   }, [link1Value, link2Value, codeCheckerId]);
@@ -183,7 +187,6 @@ export default function Code() {
           <Typography.Text className="title">Code Checker</Typography.Text>
         </div>
       </Header>
-      {console.log(codeRange, codeChecker?.length)}
       {codeRange !== codeChecker?.length ? (
         <Loader />
       ) : (
