@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600;700;800&display=swap');
+
+body {
+  font-family: 'Karla', sans-serif;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 100%;
+  height: auto;
+}
+
+.home {
+  position: absolute;
+  background-image: url('../images/bg.png');
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 100vw;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position-x: right;
+  .logo {
+    width: 300px;
+    position: absolute;
+    right: 15em;
+    top: 4em;
+  }
+  .container {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    bottom: 2em;
+    .wrapper {
+      margin-left: 7em;
+      .qa_tool_title {
+        font-weight: 800;
+        font-size: 4rem;
+        margin: 0px;
+        padding: 0px;
+        margin-bottom: 10px;
+        color: #29125f;
+        word-break: break-word;
+        z-index: 3;
+        background-image: linear-gradient(
+          300deg,
+          #e0238c,
+          #f22076 47.43%,
+          #f96666
+        );
+        background-size: 100%;
+        -webkit-background-clip: text;
+        -moz-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        -moz-text-fill-color: transparent;
+      }
+      .ant-divider {
+        margin: 16px 0;
+      }
+      .ant-form {
+        .ant-form-item {
+          margin-bottom: 8px;
+          .ant-col {
+            padding: 0;
+            label {
+              font-weight: 700;
+              color: #29125f;
+            }
+            .ant-input-affix-wrapper {
+              border-radius: 3px;
+              &:active {
+                border-color: #f7488b;
+              }
+              &:hover {
+                border-color: #f7488b;
+              }
+              &:focus {
+                border-color: #f7488b;
+              }
+            }
+          }
+        }
+      }
+    }
+    img {
+      margin-right: 3em;
+      width: 600px;
+      height: 497px;
+    }
+  }
+}
+
+.code {
+  min-height: 100vh;
+  .header {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    background-color: #812b84;
+    z-index: 101;
+    line-height: 48px;
+    display: flex;
+    align-items: center;
+    div {
+      .logo {
+        width: 30px;
+      }
+      .title {
+        color: #fff;
+        margin-left: 0.5em;
+        font-weight: 700;
+      }
+    }
+  }
+
+  .ant-collapse-header-text{
+    color: #29125f;
+    font-weight: 800;
+  }
+}
+.Loading_csLoader__39ZHF {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 100%;
+  z-index: 3;
+  background-color: hsla(0, 0%, 100%, 0.8);
+}
+
+.Loading_csLoaderInner__3yamR {
+  transform: translateY(-50%);
+  top: 50%;
+  position: absolute;
+  width: 100%;
+  color: #f02875;
+  text-align: center;
+}
+
+.Loading_csLoaderInner__3yamR span {
+  font-size: 12px;
+  opacity: 0;
+  display: inline-block;
+  text-align: right;
+  line-height: 40px;
+  padding: 0 30px 0 0;
+}
+
+@keyframes Loading_lol__3LSJV {
+  0% {
+    opacity: 0;
+    transform: translateX(-300px);
+  }
+
+  33% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  66% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(300px);
+  }
+}
+
+.Loading_csLoaderInner__3yamR span:nth-child(6) {
+  animation: Loading_lol__3LSJV 3s ease-in-out infinite;
+}
+
+.Loading_csLoaderInner__3yamR span:nth-child(5) {
+  animation: Loading_lol__3LSJV 3s ease-in-out 0.1s infinite;
+}
+
+.Loading_csLoaderInner__3yamR span:nth-child(4) {
+  animation: Loading_lol__3LSJV 3s ease-in-out 0.2s infinite;
+}
+
+.Loading_csLoaderInner__3yamR span:nth-child(3) {
+  animation: Loading_lol__3LSJV 3s ease-in-out 0.3s infinite;
+}
+
+.Loading_csLoaderInner__3yamR span:nth-child(2) {
+  animation: Loading_lol__3LSJV 3s ease-in-out 0.4s infinite;
+}
+
+.Loading_csLoaderInner__3yamR span:first-child {
+  animation: Loading_lol__3LSJV 3s ease-in-out 0.5s infinite;
+}
