@@ -45,6 +45,8 @@ import {
   Popover,
   Input,
   Form,
+  Modal,
+  Alert,
 } from "antd";
 
 import {
@@ -71,6 +73,7 @@ export default function Code() {
   const [sideOpen, setSideOpen] = useState(0);
   const [codeRange, setCodeRange] = useState(null);
   const [search, setSearch] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
 
   const {
     platform,
@@ -230,6 +233,7 @@ export default function Code() {
                   }}
                   type="primary"
                   icon={<InfoCircleOutlined />}
+                  onClick={() => setModalOpen(true)}
                 />
               </div>
               <div style={{ display: "flex" }}>
@@ -246,6 +250,7 @@ export default function Code() {
                           link1: "",
                           link2: "",
                         }}
+                        style={{ width: "300px" }}
                       >
                         <Form.Item
                           name="link1"
@@ -308,9 +313,29 @@ export default function Code() {
                 itemOne={
                   <>
                     <iframe
-                      src={`${overview[0]?.contentLocation}/index.html`}
-                      width={Number(overview[0]?.size?.split("x")[0])}
-                      height={Number(overview[0]?.size?.split("x")[1])}
+                      src={`${
+                        Object.values(links[0])
+                          ?.map((data) => data?.split("/").pop())
+                          ?.map((data) =>
+                            _.filter(overview, (d) => d?._id === data)
+                          )[0][0]?.contentLocation
+                      }/index.html`}
+                      width={Number(
+                        Object.values(links[0])
+                          ?.map((data) => data?.split("/").pop())
+                          ?.map((data) =>
+                            _.filter(overview, (d) => d?._id === data)
+                          )[0][0]
+                          ?.size?.split("x")[0]
+                      )}
+                      height={Number(
+                        Object.values(links[0])
+                          ?.map((data) => data?.split("/").pop())
+                          ?.map((data) =>
+                            _.filter(overview, (d) => d?._id === data)
+                          )[0][0]
+                          ?.size?.split("x")[1]
+                      )}
                       style={{ border: 0, backgroundColor: "#c3c3c3cc" }}
                     />
                     <div
@@ -338,10 +363,30 @@ export default function Code() {
                 itemTwo={
                   <>
                     <iframe
-                      src={`${overview[1]?.contentLocation}/index.html`}
-                      width={Number(overview[1]?.size?.split("x")[0])}
-                      height={Number(overview[1]?.size?.split("x")[1])}
-                      style={{ border: 0, background: "#c3c3c3cc" }}
+                      src={`${
+                        Object.values(links[0])
+                          ?.map((data) => data?.split("/").pop())
+                          ?.map((data) =>
+                            _.filter(overview, (d) => d?._id === data)
+                          )[1][0]?.contentLocation
+                      }/index.html`}
+                      width={Number(
+                        Object.values(links[0])
+                          ?.map((data) => data?.split("/").pop())
+                          ?.map((data) =>
+                            _.filter(overview, (d) => d?._id === data)
+                          )[1][0]
+                          ?.size?.split("x")[0]
+                      )}
+                      height={Number(
+                        Object.values(links[0])
+                          ?.map((data) => data?.split("/").pop())
+                          ?.map((data) =>
+                            _.filter(overview, (d) => d?._id === data)
+                          )[1][0]
+                          ?.size?.split("x")[1]
+                      )}
+                      style={{ border: 0, backgroundColor: "#c3c3c3cc" }}
                     />
                     <div
                       style={{
@@ -797,6 +842,106 @@ export default function Code() {
           </Content>
         </FadeIn>
       )}
+
+      <Modal
+        title="Template Overview"
+        centered
+        open={modalOpen}
+        closable={false}
+        footer={null}
+        onCancel={() => setModalOpen(false)}
+        width={1000}
+      >
+        <Divider style={{ margin: "14px 0" }} />
+        <Row gutter={[24, 24]}>
+          {!_.isEmpty(links) &&
+            Object.values(links[0])
+              ?.map((data) => data?.split("/").pop())
+              ?.map((data) => _.filter(overview, (d) => d?._id === data))
+              .map((t, index) => (
+                <Col key={index} span={12}>
+                  <div>
+                    <Typography style={{ fontSize: "12px", fontWeight: 700 }}>
+                      Template Name
+                    </Typography>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "baseline",
+                        marginTop: "4px",
+                      }}
+                    >
+                      <Tag
+                        color={index === 0 ? "success" : "error"}
+                        style={{ marginRight: "1em" }}
+                      >
+                        {index === 0 ? "Original" : "Updated"}
+                      </Tag>
+                      <Typography.Paragraph ellipsis>
+                        {t[0]?.name}
+                      </Typography.Paragraph>
+                    </div>
+                  </div>
+                  <Divider style={{ margin: "0 0 15px" }} />
+
+                  <div>
+                    <Typography style={{ fontSize: "12px", fontWeight: 700 }}>
+                      Dimension
+                    </Typography>
+                    <Typography.Paragraph ellipsis>
+                      {t[0]?.size}
+                    </Typography.Paragraph>
+                  </div>
+                  <Divider style={{ margin: "0 0 15px" }} />
+                  <div>
+                    <Typography style={{ fontSize: "12px", fontWeight: 700 }}>
+                      {`Dynamic Element (${t[0]?.dynamicElements?.length})`}
+                    </Typography>
+                    <div style={{ marginTop: "6px" }}>
+                      {t[0]?.dynamicElements?.map((data, i) => (
+                        <Tag
+                          key={i}
+                          style={{ margin: "0 0 4px 4px", borderRadius: "3px" }}
+                        >
+                          {data}
+                        </Tag>
+                      ))}
+                    </div>
+                  </div>
+                  <Divider style={{ margin: "16px 0 15px" }} />
+                  <div>
+                    <Typography style={{ fontSize: "12px", fontWeight: 700 }}>
+                      Dynamic Image Element Sizes{" "}
+                      {_.isEmpty(t[0]?.dynamicImageElementSizes)
+                        ? ""
+                        : "(" +
+                          Object.keys(t[0]?.dynamicImageElementSizes)?.length +
+                          ")"}
+                    </Typography>
+                    <div style={{ marginTop: "6px" }}>
+                      {_.isEmpty(t[0]?.dynamicImageElementSizes) ? (
+                        <Alert message="No Value" type="warning" />
+                      ) : (
+                        Object.keys(t[0]?.dynamicImageElementSizes)?.map(
+                          (data, i) => (
+                            <Tag
+                              key={i}
+                              style={{
+                                margin: "0 0 4px 4px",
+                                borderRadius: "3px",
+                              }}
+                            >
+                              {`${data}: ${t[0]?.dynamicImageElementSizes[data]}`}
+                            </Tag>
+                          )
+                        )
+                      )}
+                    </div>
+                  </div>
+                </Col>
+              ))}
+        </Row>
+      </Modal>
     </Layout>
   );
 }
