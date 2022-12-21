@@ -33,7 +33,6 @@
     "test": "craco test",
     "eject": "react-scripts eject"
   },
-  "eslintConfig": {},
   "browserslist": {
     "production": [
       ">0.2%",
@@ -46,6 +45,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {},
-  "jest": {}
+  "devDependencies": {}
 }
