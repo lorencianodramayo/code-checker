@@ -1,20 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 
-import { Divider, Form, Input, Typography } from 'antd';
+import { Divider, Form, Input, Typography } from "antd";
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 
-import { requestPlatform } from 'utils/store/reducer/platform';
+import { requestPlatform } from "utils/store/reducer/platform";
 
-import Loader from 'components/Loader';
+import Loader from "components/Loader";
 
-import team from 'assets/images/team.svg';
-import logo from 'assets/images/smartly.svg';
+import team from "assets/images/team.svg";
+import logo from "assets/images/smartly.svg";
 
-import { validate } from 'utils/helpers';
-import _ from 'lodash';
+import { validate } from "utils/helpers";
+import _ from "lodash";
 
 export default function Main() {
   const dispatch = useDispatch();
@@ -22,8 +22,8 @@ export default function Main() {
 
   const [form] = Form.useForm();
 
-  const link1Value = Form.useWatch('link1', form);
-  const link2Value = Form.useWatch('link2', form);
+  const link1Value = Form.useWatch("link1", form);
+  const link2Value = Form.useWatch("link2", form);
 
   //  redux state
   const { codeId, isFetching } = useSelector((state) => state.platform);
@@ -49,7 +49,7 @@ export default function Main() {
                 fontWeight: 700,
                 margin: 0,
                 padding: 0,
-                color: '#1d1853',
+                color: "#1d1853",
               }}
             >
               QA Tool&apos;s
@@ -71,14 +71,24 @@ export default function Main() {
               requiredMark={true}
               autoComplete="off"
               initialValues={{
-                link1: '',
-                link2: '',
+                link1: "",
+                link2: "",
               }}
             >
-              <Form.Item name="link1" label="Link 1" required>
+              <Form.Item
+                name="link1"
+                label="Original template link"
+                required
+                tooltip="Select the correct variant in the platform before pasting."
+              >
                 <Input onKeyPress={(e) => validate(e)} allowClear />
               </Form.Item>
-              <Form.Item name="link2" label="Link 2" required>
+              <Form.Item
+                name="link2"
+                label="Updated template link"
+                required
+                tooltip="Select the correct variant in the platform before pasting."
+              >
                 <Input onKeyPress={(e) => validate(e)} allowClear />
               </Form.Item>
             </Form>

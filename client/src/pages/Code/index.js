@@ -236,7 +236,7 @@ export default function Code() {
                             color: "#eb2f96",
                           }}
                         >
-                          Link 1
+                          Original File
                         </Typography.Text>
                       </a>
                       <Typography
@@ -371,7 +371,7 @@ export default function Code() {
                             color: "#eb2f96",
                           }}
                         >
-                          Link 2
+                          Updated File
                         </Typography.Text>
                       </a>
                       <Typography
