@@ -18,7 +18,7 @@ import _ from "lodash";
 
 export default function Main() {
   const dispatch = useDispatch();
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [form] = Form.useForm();
 
@@ -52,7 +52,7 @@ export default function Main() {
                 color: "#1d1853",
               }}
             >
-              QA Tool&apos;s
+              Quality Assurance
             </Typography.Title>
             <Typography.Title level={1} className="qa_tool_title">
               Code Checker
