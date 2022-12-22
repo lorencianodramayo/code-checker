@@ -52,7 +52,7 @@ export default function Main() {
                 color: "#1d1853",
               }}
             >
-              Quality Assurance
+              QA
             </Typography.Title>
             <Typography.Title level={1} className="qa_tool_title">
               Code Checker
