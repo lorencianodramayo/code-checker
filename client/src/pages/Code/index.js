@@ -751,8 +751,8 @@ export default function Code() {
                           header={codeCheck?.name}
                           key={index}
                           extra={
-                            codeCheck?.details?.removed !==
-                            codeCheck?.details?.added ? (
+                            codeCheck?.details?.removed !== 0 &&
+                            codeCheck?.details?.added !== 0? (
                               <Tooltip
                                 placement="left"
                                 title={`${codeCheck?.details?.removed} Removed, ${codeCheck?.details?.added} Added`}
