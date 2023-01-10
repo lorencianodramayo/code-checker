@@ -184,121 +184,127 @@ export default function Code() {
 
   return (
     <Layout className="code">
-      <Header className="header">
-        <div>
-          <img src={logoMini} alt="smartly mini" className="logo" />
-          <Typography.Text className="title">Code Checker</Typography.Text>
+      {/* Search and Header */}
+      <div className="header-wrapper">
+        <Header className="header">
+          <div>
+            <img src={logoMini} alt="smartly mini" className="logo" />
+            <Typography.Text className="title">Code Checker</Typography.Text>
+          </div>
+        </Header>
+
+        <div
+          style={{
+            marginBottom: "0",
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "1em 3.1em",
+          }}
+        >
+          <div style={{ display: "flex" }}>
+            <Input
+              placeholder="Search"
+              style={{
+                borderRadius: "3px",
+                width: "200px",
+                "&:active": {
+                  borderColor: "#f7488b",
+                },
+                "&:hover": {
+                  borderColor: "#f7488b",
+                },
+                "&:focus": {
+                  borderColor: "#f7488b",
+                },
+              }}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
+
+            <Button
+              style={{
+                borderRadius: "3px",
+                backgroundColor: "#eb2f96",
+                marginLeft: "8px",
+              }}
+              type="primary"
+              icon={<InfoCircleOutlined />}
+              onClick={() => setModalOpen(true)}
+            />
+          </div>
+          <div style={{ display: "flex" }}>
+            <Popover
+              placement="bottomRight"
+              content={
+                <>
+                  <Form
+                    form={form}
+                    layout="vertical"
+                    requiredMark={true}
+                    autoComplete="off"
+                    initialValues={{
+                      link1: "",
+                      link2: "",
+                    }}
+                    style={{ width: "300px" }}
+                  >
+                    <Form.Item
+                      name="link1"
+                      label="Original template link"
+                      required
+                      tooltip="Select the correct variant in the platform before pasting."
+                      style={{ marginBottom: "12px" }}
+                    >
+                      <Input
+                        style={{ borderRadius: "3px" }}
+                        onKeyPress={(e) => validate(e)}
+                        allowClear
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      name="link2"
+                      label="Updated template link"
+                      required
+                      tooltip="Select the correct variant in the platform before pasting."
+                      style={{ marginBottom: "12px" }}
+                    >
+                      <Input
+                        style={{ borderRadius: "3px" }}
+                        onKeyPress={(e) => validate(e)}
+                        allowClear
+                      />
+                    </Form.Item>
+                  </Form>
+                </>
+              }
+              trigger="click"
+            >
+              <Button
+                style={{
+                  borderRadius: "3px",
+                  backgroundColor: "#f5f5f5",
+                  border: "1px solid #5025c4",
+                  color: "#5025c4",
+                }}
+                icon={<PlusOutlined />}
+                type="outlined"
+              >
+                Generate New
+              </Button>
+            </Popover>
+          </div>
         </div>
-      </Header>
+      </div>
+
       {codeRange !== codeChecker?.length ? (
         <Loader />
       ) : (
         <FadeIn>
           <Content
             style={{
-              padding: "20px 50px",
+              padding: "0px 50px 20px 50px",
+              marginTop: "112px",
             }}
           >
-            <div
-              style={{
-                marginBottom: "12px",
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <div style={{ display: "flex" }}>
-                <Input
-                  placeholder="Search"
-                  style={{
-                    borderRadius: "3px",
-                    width: "200px",
-                    "&:active": {
-                      borderColor: "#f7488b",
-                    },
-                    "&:hover": {
-                      borderColor: "#f7488b",
-                    },
-                    "&:focus": {
-                      borderColor: "#f7488b",
-                    },
-                  }}
-                  onChange={(e) => handleSearch(e.target.value)}
-                />
-
-                <Button
-                  style={{
-                    borderRadius: "3px",
-                    backgroundColor: "#eb2f96",
-                    marginLeft: "8px",
-                  }}
-                  type="primary"
-                  icon={<InfoCircleOutlined />}
-                  onClick={() => setModalOpen(true)}
-                />
-              </div>
-              <div style={{ display: "flex" }}>
-                <Popover
-                  placement="bottomRight"
-                  content={
-                    <>
-                      <Form
-                        form={form}
-                        layout="vertical"
-                        requiredMark={true}
-                        autoComplete="off"
-                        initialValues={{
-                          link1: "",
-                          link2: "",
-                        }}
-                        style={{ width: "300px" }}
-                      >
-                        <Form.Item
-                          name="link1"
-                          label="Original template link"
-                          required
-                          tooltip="Select the correct variant in the platform before pasting."
-                          style={{ marginBottom: "12px" }}
-                        >
-                          <Input
-                            style={{ borderRadius: "3px" }}
-                            onKeyPress={(e) => validate(e)}
-                            allowClear
-                          />
-                        </Form.Item>
-                        <Form.Item
-                          name="link2"
-                          label="Updated template link"
-                          required
-                          tooltip="Select the correct variant in the platform before pasting."
-                          style={{ marginBottom: "12px" }}
-                        >
-                          <Input
-                            style={{ borderRadius: "3px" }}
-                            onKeyPress={(e) => validate(e)}
-                            allowClear
-                          />
-                        </Form.Item>
-                      </Form>
-                    </>
-                  }
-                  trigger="click"
-                >
-                  <Button
-                    style={{
-                      borderRadius: "3px",
-                      backgroundColor: "#f5f5f5",
-                      border: "1px solid #5025c4",
-                      color: "#5025c4",
-                    }}
-                    icon={<PlusOutlined />}
-                    type="outlined"
-                  >
-                    Generate New
-                  </Button>
-                </Popover>
-              </div>
-            </div>
-
             <div
               style={{
                 display: "flex",
@@ -752,7 +758,7 @@ export default function Code() {
                           key={index}
                           extra={
                             codeCheck?.details?.removed !== 0 ||
-                            codeCheck?.details?.added !== 0? (
+                            codeCheck?.details?.added !== 0 ? (
                               <Tooltip
                                 placement="left"
                                 title={`${codeCheck?.details?.removed} Removed, ${codeCheck?.details?.added} Added`}
