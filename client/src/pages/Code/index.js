@@ -74,6 +74,7 @@ export default function Code() {
   const [codeRange, setCodeRange] = useState(null);
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [clicked, setClicked] = useState(false);
 
   const {
     platform,
@@ -105,6 +106,7 @@ export default function Code() {
   }, []);
 
   useEffect(() => {
+    setClicked(false);
     !_.isEmpty(platform) &&
       (platform[0][0]?.variant === "template_1"
         ? platform[0]
@@ -146,19 +148,20 @@ export default function Code() {
           (fil) => fil === true
         )?.length === 0
           ? null
-          : _.filter(
-              (platform[0][0]?.variant === "template_1"
-                ? platform[0]
-                : platform[1]
-              )?.map(
-                (data) =>
-                  !_.isEmpty(data?.name) &&
-                  data?.name !== "__platform_preview.html" &&
-                  data?.name !== "" &&
-                  !_.isUndefined(data?.code)
-              ),
-              (fil) => fil === true
-            )?.length
+          : !_.isEmpty(platform) &&
+              _.filter(
+                (platform[0][0]?.variant === "template_1"
+                  ? platform[0]
+                  : platform[1]
+                )?.map(
+                  (data) =>
+                    !_.isEmpty(data?.name) &&
+                    data?.name !== "__platform_preview.html" &&
+                    data?.name !== "" &&
+                    !_.isUndefined(data?.code)
+                ),
+                (fil) => fil === true
+              )?.length
       );
 
     !_.isEmpty(platform) && setSideOpen(200);
@@ -277,6 +280,8 @@ export default function Code() {
                 </>
               }
               trigger="click"
+              open={clicked}
+              onOpenChange={() => setClicked((prev) => !prev)}
             >
               <Button
                 style={{
@@ -295,7 +300,7 @@ export default function Code() {
         </div>
       </div>
 
-      {codeRange !== codeChecker?.length ? (
+      {codeRange !== codeChecker?.length || _.isEmpty(platform) ? (
         <Loader />
       ) : (
         <FadeIn>
@@ -314,109 +319,111 @@ export default function Code() {
                 backgroundColor: "#c3c3c3cc",
               }}
             >
-              <ReactCompareSlider
-                style={{ display: "flex" }}
-                itemOne={
-                  <>
-                    <iframe
-                      src={`${
-                        Object.values(links[0])
-                          ?.map((data) => data?.split("/").pop())
-                          ?.map((data) =>
-                            _.filter(overview, (d) => d?._id === data)
-                          )[0][0]?.contentLocation
-                      }/index.html`}
-                      width={Number(
-                        Object.values(links[0])
-                          ?.map((data) => data?.split("/").pop())
-                          ?.map((data) =>
-                            _.filter(overview, (d) => d?._id === data)
-                          )[0][0]
-                          ?.size?.split("x")[0]
-                      )}
-                      height={Number(
-                        Object.values(links[0])
-                          ?.map((data) => data?.split("/").pop())
-                          ?.map((data) =>
-                            _.filter(overview, (d) => d?._id === data)
-                          )[0][0]
-                          ?.size?.split("x")[1]
-                      )}
-                      style={{ border: 0, backgroundColor: "#c3c3c3cc" }}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        display: "flex",
-                        bottom: "1em",
-                        margin: "0 auto",
-                        width: "100%",
-                        left: 0,
-                        right: 0,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Tag
-                        color="success"
-                        style={{ borderRadius: "3px", margin: 0 }}
+              {!_.isEmpty(links) && (
+                <ReactCompareSlider
+                  style={{ display: "flex" }}
+                  itemOne={
+                    <>
+                      <iframe
+                        src={`${
+                          Object.values(links[0])
+                            ?.map((data) => data?.split("/").pop())
+                            ?.map((data) =>
+                              _.filter(overview, (d) => d?._id === data)
+                            )[0][0]?.contentLocation
+                        }/index.html`}
+                        width={Number(
+                          Object.values(links[0])
+                            ?.map((data) => data?.split("/").pop())
+                            ?.map((data) =>
+                              _.filter(overview, (d) => d?._id === data)
+                            )[0][0]
+                            ?.size?.split("x")[0]
+                        )}
+                        height={Number(
+                          Object.values(links[0])
+                            ?.map((data) => data?.split("/").pop())
+                            ?.map((data) =>
+                              _.filter(overview, (d) => d?._id === data)
+                            )[0][0]
+                            ?.size?.split("x")[1]
+                        )}
+                        style={{ border: 0, backgroundColor: "#c3c3c3cc" }}
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          display: "flex",
+                          bottom: "1em",
+                          margin: "0 auto",
+                          width: "100%",
+                          left: 0,
+                          right: 0,
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
                       >
-                        Original
-                      </Tag>
-                    </div>
-                  </>
-                }
-                itemTwo={
-                  <>
-                    <iframe
-                      src={`${
-                        Object.values(links[0])
-                          ?.map((data) => data?.split("/").pop())
-                          ?.map((data) =>
-                            _.filter(overview, (d) => d?._id === data)
-                          )[1][0]?.contentLocation
-                      }/index.html`}
-                      width={Number(
-                        Object.values(links[0])
-                          ?.map((data) => data?.split("/").pop())
-                          ?.map((data) =>
-                            _.filter(overview, (d) => d?._id === data)
-                          )[1][0]
-                          ?.size?.split("x")[0]
-                      )}
-                      height={Number(
-                        Object.values(links[0])
-                          ?.map((data) => data?.split("/").pop())
-                          ?.map((data) =>
-                            _.filter(overview, (d) => d?._id === data)
-                          )[1][0]
-                          ?.size?.split("x")[1]
-                      )}
-                      style={{ border: 0, backgroundColor: "#c3c3c3cc" }}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        display: "flex",
-                        bottom: "1em",
-                        margin: "0 auto",
-                        width: "100%",
-                        left: 0,
-                        right: 0,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Tag
-                        color="error"
-                        style={{ borderRadius: "3px", margin: 0 }}
+                        <Tag
+                          color="success"
+                          style={{ borderRadius: "3px", margin: 0 }}
+                        >
+                          Original
+                        </Tag>
+                      </div>
+                    </>
+                  }
+                  itemTwo={
+                    <>
+                      <iframe
+                        src={`${
+                          Object.values(links[0])
+                            ?.map((data) => data?.split("/").pop())
+                            ?.map((data) =>
+                              _.filter(overview, (d) => d?._id === data)
+                            )[1][0]?.contentLocation
+                        }/index.html`}
+                        width={Number(
+                          Object.values(links[0])
+                            ?.map((data) => data?.split("/").pop())
+                            ?.map((data) =>
+                              _.filter(overview, (d) => d?._id === data)
+                            )[1][0]
+                            ?.size?.split("x")[0]
+                        )}
+                        height={Number(
+                          Object.values(links[0])
+                            ?.map((data) => data?.split("/").pop())
+                            ?.map((data) =>
+                              _.filter(overview, (d) => d?._id === data)
+                            )[1][0]
+                            ?.size?.split("x")[1]
+                        )}
+                        style={{ border: 0, backgroundColor: "#c3c3c3cc" }}
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          display: "flex",
+                          bottom: "1em",
+                          margin: "0 auto",
+                          width: "100%",
+                          left: 0,
+                          right: 0,
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
                       >
-                        Updated
-                      </Tag>
-                    </div>
-                  </>
-                }
-              ></ReactCompareSlider>
+                        <Tag
+                          color="error"
+                          style={{ borderRadius: "3px", margin: 0 }}
+                        >
+                          Updated
+                        </Tag>
+                      </div>
+                    </>
+                  }
+                ></ReactCompareSlider>
+              )}
             </div>
             <Layout
               style={{
@@ -448,7 +455,11 @@ export default function Code() {
                           marginBottom: "0.2em",
                           color: "#eb2f96",
                         }}
-                        href={!_.isEmpty(links) && Object.values(links[0])[0]}
+                        href={
+                          !_.isEmpty(links)
+                            ? Object.values(links[0])[0]
+                            : undefined
+                        }
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -466,122 +477,126 @@ export default function Code() {
                       </a>
                       <Typography
                         style={{ fontSize: "10px", color: "#947bb7" }}
-                      >{`${
-                        _.filter(
-                          _.sortBy(
-                            platform[0][0]?.variant === "template_1"
-                              ? platform[0]
-                              : platform[1],
-                            (o) => o.name
-                          )?.map(
-                            (data) =>
-                              data?.name !== "__platform_preview.html" &&
-                              data?.name !== "" &&
-                              data?.name
-                          ),
-                          (fil) => fil !== false
-                        ).length
-                      } Files`}</Typography>
+                      >
+                        {!_.isEmpty(platform) &&
+                          `${
+                            _.filter(
+                              _.sortBy(
+                                platform[0][0]?.variant === "template_1"
+                                  ? platform[0]
+                                  : platform[1],
+                                (o) => o.name
+                              )?.map(
+                                (data) =>
+                                  data?.name !== "__platform_preview.html" &&
+                                  data?.name !== "" &&
+                                  data?.name
+                              ),
+                              (fil) => fil !== false
+                            ).length
+                          } Files`}
+                      </Typography>
                     </div>
 
-                    {_.filter(
-                      _.sortBy(
-                        platform[0][0]?.variant === "template_1"
-                          ? platform[0]
-                          : platform[1],
-                        (o) => o?.name
-                      ),
-                      (f) =>
-                        f?.name?.toLowerCase()?.includes(search.toLowerCase())
-                    )?.map(
-                      (data, index) =>
-                        data?.name !== "__platform_preview.html" &&
-                        data?.name !== "" && (
-                          <div
-                            key={index}
-                            style={{ display: "flex", alignItems: "center" }}
-                          >
-                            <FontAwesomeIcon
-                              style={{
-                                color: ["html", "htm"].includes(
-                                  data?.name?.split(".").pop()
-                                )
-                                  ? "#ff6505"
-                                  : ["css", "less", "sass", "scss"].includes(
-                                      data?.name?.split(".").pop()
-                                    )
-                                  ? "#05a4ff"
-                                  : ["json", "js"].includes(
-                                      data?.name?.split(".").pop()
-                                    )
-                                  ? "#fbc924"
-                                  : [
-                                      "png",
-                                      "svg",
-                                      "jpeg",
-                                      "gif",
-                                      "jpg",
-                                      "eps",
-                                      "ico",
-                                    ].includes(data?.name?.split(".").pop())
-                                  ? "#38a403"
-                                  : [
-                                      "woff",
-                                      "woff2",
-                                      "otf",
-                                      "ttf",
-                                      "txt",
-                                    ].includes(data?.name?.split(".").pop())
-                                  ? "#000000"
-                                  : "#ececec",
-                              }}
-                              icon={
-                                ["html", "htm"].includes(
-                                  data?.name?.split(".").pop()
-                                )
-                                  ? faHtml5
-                                  : ["css", "less", "sass", "scss"].includes(
-                                      data?.name?.split(".").pop()
-                                    )
-                                  ? faCss3Alt
-                                  : ["json", "js"].includes(
-                                      data?.name?.split(".").pop()
-                                    )
-                                  ? faJsSquare
-                                  : [
-                                      "png",
-                                      "svg",
-                                      "jpeg",
-                                      "gif",
-                                      "jpg",
-                                      "eps",
-                                      "ico",
-                                    ].includes(data?.name?.split(".").pop())
-                                  ? faImage
-                                  : [
-                                      "woff",
-                                      "woff2",
-                                      "otf",
-                                      "ttf",
-                                      "txt",
-                                    ].includes(data?.name?.split(".").pop())
-                                  ? faFont
-                                  : faSquare
-                              }
-                            />
-                            <Typography.Paragraph
-                              style={{
-                                fontSize: "11px",
-                                fontWeight: 400,
-                                margin: "4px 0px 4px 7px",
-                              }}
-                              ellipsis
+                    {!_.isEmpty(platform) &&
+                      _.filter(
+                        _.sortBy(
+                          platform[0][0]?.variant === "template_1"
+                            ? platform[0]
+                            : platform[1],
+                          (o) => o?.name
+                        ),
+                        (f) =>
+                          f?.name?.toLowerCase()?.includes(search.toLowerCase())
+                      )?.map(
+                        (data, index) =>
+                          data?.name !== "__platform_preview.html" &&
+                          data?.name !== "" && (
+                            <div
+                              key={index}
+                              style={{ display: "flex", alignItems: "center" }}
                             >
-                              {data?.name}
-                            </Typography.Paragraph>
-                          </div>
-                        )
-                    )}
+                              <FontAwesomeIcon
+                                style={{
+                                  color: ["html", "htm"].includes(
+                                    data?.name?.split(".").pop()
+                                  )
+                                    ? "#ff6505"
+                                    : ["css", "less", "sass", "scss"].includes(
+                                        data?.name?.split(".").pop()
+                                      )
+                                    ? "#05a4ff"
+                                    : ["json", "js"].includes(
+                                        data?.name?.split(".").pop()
+                                      )
+                                    ? "#fbc924"
+                                    : [
+                                        "png",
+                                        "svg",
+                                        "jpeg",
+                                        "gif",
+                                        "jpg",
+                                        "eps",
+                                        "ico",
+                                      ].includes(data?.name?.split(".").pop())
+                                    ? "#38a403"
+                                    : [
+                                        "woff",
+                                        "woff2",
+                                        "otf",
+                                        "ttf",
+                                        "txt",
+                                      ].includes(data?.name?.split(".").pop())
+                                    ? "#000000"
+                                    : "#ececec",
+                                }}
+                                icon={
+                                  ["html", "htm"].includes(
+                                    data?.name?.split(".").pop()
+                                  )
+                                    ? faHtml5
+                                    : ["css", "less", "sass", "scss"].includes(
+                                        data?.name?.split(".").pop()
+                                      )
+                                    ? faCss3Alt
+                                    : ["json", "js"].includes(
+                                        data?.name?.split(".").pop()
+                                      )
+                                    ? faJsSquare
+                                    : [
+                                        "png",
+                                        "svg",
+                                        "jpeg",
+                                        "gif",
+                                        "jpg",
+                                        "eps",
+                                        "ico",
+                                      ].includes(data?.name?.split(".").pop())
+                                    ? faImage
+                                    : [
+                                        "woff",
+                                        "woff2",
+                                        "otf",
+                                        "ttf",
+                                        "txt",
+                                      ].includes(data?.name?.split(".").pop())
+                                    ? faFont
+                                    : faSquare
+                                }
+                              />
+                              <Typography.Paragraph
+                                style={{
+                                  fontSize: "11px",
+                                  fontWeight: 400,
+                                  margin: "4px 0px 4px 7px",
+                                }}
+                                ellipsis
+                              >
+                                {data?.name}
+                              </Typography.Paragraph>
+                            </div>
+                          )
+                      )}
                   </div>
                   <Divider style={{ margin: "16px 0" }} />
                   <div style={{ padding: "0 1em" }}>
@@ -598,7 +613,11 @@ export default function Code() {
                           marginBottom: "0.2em",
                           color: "#eb2f96",
                         }}
-                        href={!_.isEmpty(links) && Object.values(links[0])[1]}
+                        href={
+                          !_.isEmpty(links)
+                            ? Object.values(links[0])[1]
+                            : undefined
+                        }
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -616,122 +635,126 @@ export default function Code() {
                       </a>
                       <Typography
                         style={{ fontSize: "10px", color: "#947bb7" }}
-                      >{`${
-                        _.filter(
-                          _.sortBy(
-                            platform[1][0]?.variant === "template_2"
-                              ? platform[1]
-                              : platform[0],
-                            (o) => o.name
-                          )?.map(
-                            (data) =>
-                              data?.name !== "__platform_preview.html" &&
-                              data?.name !== "" &&
-                              data?.name
-                          ),
-                          (fil) => fil !== false
-                        ).length
-                      } Files`}</Typography>
+                      >
+                        {!_.isEmpty(platform) &&
+                          `${
+                            _.filter(
+                              _.sortBy(
+                                platform[1][0]?.variant === "template_2"
+                                  ? platform[1]
+                                  : platform[0],
+                                (o) => o.name
+                              )?.map(
+                                (data) =>
+                                  data?.name !== "__platform_preview.html" &&
+                                  data?.name !== "" &&
+                                  data?.name
+                              ),
+                              (fil) => fil !== false
+                            ).length
+                          } Files`}
+                      </Typography>
                     </div>
 
-                    {_.filter(
-                      _.sortBy(
-                        platform[1][0]?.variant === "template_2"
-                          ? platform[1]
-                          : platform[0],
-                        (o) => o?.name
-                      ),
-                      (f) =>
-                        f?.name?.toLowerCase()?.includes(search.toLowerCase())
-                    )?.map(
-                      (data, index) =>
-                        data?.name !== "__platform_preview.html" &&
-                        data?.name !== "" && (
-                          <div
-                            key={index}
-                            style={{ display: "flex", alignItems: "center" }}
-                          >
-                            <FontAwesomeIcon
-                              style={{
-                                color: ["html", "htm"].includes(
-                                  data?.name?.split(".").pop()
-                                )
-                                  ? "#ff6505"
-                                  : ["css", "less", "sass", "scss"].includes(
-                                      data?.name?.split(".").pop()
-                                    )
-                                  ? "#05a4ff"
-                                  : ["json", "js"].includes(
-                                      data?.name?.split(".").pop()
-                                    )
-                                  ? "#fbc924"
-                                  : [
-                                      "png",
-                                      "svg",
-                                      "jpeg",
-                                      "gif",
-                                      "jpg",
-                                      "eps",
-                                      "ico",
-                                    ].includes(data?.name?.split(".").pop())
-                                  ? "#38a403"
-                                  : [
-                                      "woff",
-                                      "woff2",
-                                      "otf",
-                                      "ttf",
-                                      "txt",
-                                    ].includes(data?.name?.split(".").pop())
-                                  ? "#000000"
-                                  : "#ececec",
-                              }}
-                              icon={
-                                ["html", "htm"].includes(
-                                  data?.name?.split(".").pop()
-                                )
-                                  ? faHtml5
-                                  : ["css", "less", "sass", "scss"].includes(
-                                      data?.name?.split(".").pop()
-                                    )
-                                  ? faCss3Alt
-                                  : ["json", "js"].includes(
-                                      data?.name?.split(".").pop()
-                                    )
-                                  ? faJsSquare
-                                  : [
-                                      "png",
-                                      "svg",
-                                      "jpeg",
-                                      "gif",
-                                      "jpg",
-                                      "eps",
-                                      "ico",
-                                    ].includes(data?.name?.split(".").pop())
-                                  ? faImage
-                                  : [
-                                      "woff",
-                                      "woff2",
-                                      "otf",
-                                      "ttf",
-                                      "txt",
-                                    ].includes(data?.name?.split(".").pop())
-                                  ? faFont
-                                  : faSquare
-                              }
-                            />
-                            <Typography.Paragraph
-                              style={{
-                                fontSize: "11px",
-                                fontWeight: 400,
-                                margin: "4px 0px 4px 7px",
-                              }}
-                              ellipsis
+                    {!_.isEmpty(platform) &&
+                      _.filter(
+                        _.sortBy(
+                          platform[1][0]?.variant === "template_2"
+                            ? platform[1]
+                            : platform[0],
+                          (o) => o?.name
+                        ),
+                        (f) =>
+                          f?.name?.toLowerCase()?.includes(search.toLowerCase())
+                      )?.map(
+                        (data, index) =>
+                          data?.name !== "__platform_preview.html" &&
+                          data?.name !== "" && (
+                            <div
+                              key={index}
+                              style={{ display: "flex", alignItems: "center" }}
                             >
-                              {data?.name}
-                            </Typography.Paragraph>
-                          </div>
-                        )
-                    )}
+                              <FontAwesomeIcon
+                                style={{
+                                  color: ["html", "htm"].includes(
+                                    data?.name?.split(".").pop()
+                                  )
+                                    ? "#ff6505"
+                                    : ["css", "less", "sass", "scss"].includes(
+                                        data?.name?.split(".").pop()
+                                      )
+                                    ? "#05a4ff"
+                                    : ["json", "js"].includes(
+                                        data?.name?.split(".").pop()
+                                      )
+                                    ? "#fbc924"
+                                    : [
+                                        "png",
+                                        "svg",
+                                        "jpeg",
+                                        "gif",
+                                        "jpg",
+                                        "eps",
+                                        "ico",
+                                      ].includes(data?.name?.split(".").pop())
+                                    ? "#38a403"
+                                    : [
+                                        "woff",
+                                        "woff2",
+                                        "otf",
+                                        "ttf",
+                                        "txt",
+                                      ].includes(data?.name?.split(".").pop())
+                                    ? "#000000"
+                                    : "#ececec",
+                                }}
+                                icon={
+                                  ["html", "htm"].includes(
+                                    data?.name?.split(".").pop()
+                                  )
+                                    ? faHtml5
+                                    : ["css", "less", "sass", "scss"].includes(
+                                        data?.name?.split(".").pop()
+                                      )
+                                    ? faCss3Alt
+                                    : ["json", "js"].includes(
+                                        data?.name?.split(".").pop()
+                                      )
+                                    ? faJsSquare
+                                    : [
+                                        "png",
+                                        "svg",
+                                        "jpeg",
+                                        "gif",
+                                        "jpg",
+                                        "eps",
+                                        "ico",
+                                      ].includes(data?.name?.split(".").pop())
+                                    ? faImage
+                                    : [
+                                        "woff",
+                                        "woff2",
+                                        "otf",
+                                        "ttf",
+                                        "txt",
+                                      ].includes(data?.name?.split(".").pop())
+                                    ? faFont
+                                    : faSquare
+                                }
+                              />
+                              <Typography.Paragraph
+                                style={{
+                                  fontSize: "11px",
+                                  fontWeight: 400,
+                                  margin: "4px 0px 4px 7px",
+                                }}
+                                ellipsis
+                              >
+                                {data?.name}
+                              </Typography.Paragraph>
+                            </div>
+                          )
+                      )}
                   </div>
                 </div>
               </Sider>
