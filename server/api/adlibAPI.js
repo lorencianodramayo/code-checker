@@ -29,7 +29,7 @@ router.get("/", (req, res) => {
 
       platformSave.save((error, result) => {
         if (error) {
-          return res.status(500).json({ msg: "Sorry, internal server errors" });
+          return res.status(500).json({ msg: `Platform Save: ${error}` });
         }
 
         return res.status(200).json(result);
@@ -41,7 +41,7 @@ router.get("/", (req, res) => {
 router.get("/getPlatform", (req, res) => {
   PlatformModel.findById(req?.query?.codeId, (err, success) => {
     return err
-      ? res.status(500).json({ msg: "Sorry, Internal server error" })
+      ? res.status(500).json({ msg: `GET Platform: ${err}` })
       : res.json(success);
   }).sort([["_id", 1]]);
 });
