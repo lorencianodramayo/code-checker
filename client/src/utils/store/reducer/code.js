@@ -43,10 +43,11 @@ export const {
 
 export const requestCodeCheck = (params) => async (dispatch) => {
   dispatch(initCodeChecker());
+  console.log(params);
 
   const { status, data } = await addCodeChecker({
-    left: params?.left,
-    right: params?.right,
+    left: _.isEmpty(params?.left) ? '' : params.left,
+    right: _.isEmpty(params?.right) ? '' : params?.right,
     diff_level: params?.diff_level,
   });
 

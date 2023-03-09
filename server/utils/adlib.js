@@ -28,6 +28,7 @@ const getAdlibToken = async (platform) => {
   );
 
   var responseHeaders = loginRequest.headers;
+  
   var responseCookies = responseHeaders.get("set-cookie");
   var loginCookie = responseCookies.substr(
     responseCookies.indexOf("connect.sid=") + 12,
@@ -35,6 +36,7 @@ const getAdlibToken = async (platform) => {
       (responseCookies.indexOf("connect.sid=") + 12)
   );
 
+  console.log(loginCookie);
   return { status: "ok", data: loginCookie };
 };
 

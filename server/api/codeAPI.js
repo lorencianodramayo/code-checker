@@ -3,6 +3,7 @@ const router = express.Router();
 const axios = require("axios");
 
 router.post("/", async (req, res) => {
+  console.log(req.body);
   try {
     const response = await axios.post(
       "https://api.diffchecker.com/public/text?output_type=html&email=lorencianodramayo@gmail.com",
