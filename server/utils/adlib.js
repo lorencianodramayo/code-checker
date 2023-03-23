@@ -4,8 +4,8 @@ const { unzipFile } = require("./code");
 
 const getAdlibToken = async (platform) => {
   var details = {
-    username: "ciano@ad-lib.io",
-    password: "W4d1w4dz",
+    username: "integrations@ad-lib.io",
+    password: "!Integrations2021",
   };
 
   var formBody = [];
