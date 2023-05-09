@@ -3,6 +3,11 @@ const fetch = require("cross-fetch");
 const { unzipFile } = require("./code");
 
 const getAdlibToken = async (platform) => {
+  var details = {
+    username: "integrations@ad-lib.io",
+    password: "!Integrations2021",
+  };
+  
   var loginRequest = await fetch(
     `https://api-${platform}.ad-lib.io/auth/login`,
     {
