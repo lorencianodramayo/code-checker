@@ -3,32 +3,17 @@ const fetch = require("cross-fetch");
 const { unzipFile } = require("./code");
 
 const getAdlibToken = async (platform) => {
-  var details = {
-    username: "integrations@ad-lib.io",
-    password: "!Integrations2021",
-  };
-
-  var formBody = [];
-  for (var property in details) {
-    var encodedKey = encodeURIComponent(property);
-    var encodedValue = encodeURIComponent(details[property]);
-    formBody.push(encodedKey + "=" + encodedValue);
-  }
-  formBody = formBody.join("&");
-
   var loginRequest = await fetch(
     `https://api-${platform}.ad-lib.io/auth/login`,
     {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        "Content-Type": "application/json; charset=UTF-8",
       },
-      body: formBody,
+      body: JSON.stringify(details),
     }
   );
-
   var responseHeaders = loginRequest.headers;
-  
   var responseCookies = responseHeaders.get("set-cookie");
   var loginCookie = responseCookies.substr(
     responseCookies.indexOf("connect.sid=") + 12,
@@ -36,7 +21,6 @@ const getAdlibToken = async (platform) => {
       (responseCookies.indexOf("connect.sid=") + 12)
   );
 
-  console.log(loginCookie);
   return { status: "ok", data: loginCookie };
 };
 
